@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hash.test.repository.HashTableRepository">
+  <select id="selectHashTableList" resultType="map">
+    select ht_no as "ht_no", ht_hash as "ht_hash", ht_cnt as "ht_cnt" from hash_table
+  </select>
+  
+  <select id="selectHashTableByHtHash" resultType="map">
+    select ht_no as "ht_no", ht_hash as "ht_hash", ht_cnt as "ht_cnt" from hash_table
+    where ht_hash=#{ht_hash}
+  </select>
+  
+  <insert id="insertHashTable" parameterType="map">
+  	<selectKey keyColumn="ht_no" keyProperty="ht_no" order="BEFORE" resultType="int">
+  		select seq_ht_no.nextval from dual
+  	</selectKey>
+  	insert into hash_table(ht_no, ht_hash)
+  	values(#{ht_no}, #{ht_hash})
+  </insert>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hash.test.repository.HashBoardRespository">
+  <resultMap type="map" id="hb">
+  	<result property="HB_CONTENT" column="HB_CONTENT" javaType="string" jdbcType="CLOB"></result>
+  </resultMap>
+  
+  <select id="selectHashBoardList" resultMap="hb">
+    select * from hash_board
+  </select>
+  
+  <select id="selectHashBoardListByHashTag" resultMap="hb">
+  	select hb.* FROM
+		hash_board hb,
+		hash_table ht,
+		board_table_map btm
+		where ht.ht_hash=#{ht_hash}
+		and ht.ht_no=btm.ht_no
+		and btm.hb_no=hb.hb_no
+  </select>
+  
+  <select id="selectHashBoard" resultMap="hb">
+  	select * from hash_board where hb_no=#{hb_no}
+  </select>
+  
+  <select id="selectHashList" resultType="map">
+  	select ht.ht_hash from hash_table ht, board_table_map btm
+	where ht.ht_no=btm.ht_no
+	and btm.hb_no=#{hb_no}
+  </select>
+  
+  <insert id="insertHashBoard" parameterType="map">
+  	<selectKey keyColumn="hb_no" keyProperty="hb_no" order="BEFORE" resultType="int">
+  		select seq_hb_no.nextval from dual
+  	</selectKey>
+  	insert into hash_board(hb_no, hb_title, hb_content)
+  	values(#{hb_no}, #{hb_title}, #{hb_content})
+  </insert>
+  
+  <insert id="insertBoardTableMap" parameterType="map">
+  	insert into board_table_map(ht_no, hb_no)
+  	values(#{ht_no},#{hb_no})
+  </insert>
+  
+</mapper>
